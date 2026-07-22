@@ -2,7 +2,7 @@
 
 MediCore is a comprehensive, modern, and responsive Hospital Management System built with a Hexagonal Architecture on the backend and a sleek React interface on the frontend. It is designed to streamline clinical workflows, manage patient records, and optimize daily hospital operations.
 
-## ✨ Key Features
+## ✨ Key Features..
 
 - **Role-Based Access Control (RBAC):** Strict security ensuring users (Admins, Doctors, Receptionists, Pharmacists, Patients) only see and interact with data relevant to their role.
 - **Dynamic Dashboard:** Real-time metrics and dynamic data visualization (Patient Demographics, Weekly Appointment volumes).
