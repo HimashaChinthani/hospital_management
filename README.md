@@ -1,4 +1,4 @@
-# MediCore - Hospital Management System
+# MediCore - Hospital Management System....
 
 MediCore is a comprehensive, modern, and responsive Hospital Management System built with a Hexagonal Architecture on the backend and a sleek React interface on the frontend. It is designed to streamline clinical workflows, manage patient records, and optimize daily hospital operations.
 
