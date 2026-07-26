@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/himashachinthani/backend/internal/adapter/storage/mysql/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -42,6 +43,17 @@ func NewConnection(cfg Config) (*gorm.DB, error) {
 }
 
 func Migrate(db *gorm.DB) error {
-	// Tables are already created in the user's database
-	return nil
+	return db.AutoMigrate(
+		&models.Role{},
+		&models.User{},
+		&models.Department{},
+		&models.Doctor{},
+		&models.Patient{},
+		&models.Appointment{},
+		&models.Medicine{},
+		&models.Prescription{},
+		&models.PrescriptionItem{},
+		&models.Bill{},
+		&models.Payment{},
+	)
 }
