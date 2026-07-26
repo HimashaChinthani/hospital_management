@@ -1,11 +1,56 @@
 pipeline {
     agent any
+    
+    options {
+        timeout(time: 15, unit: 'MINUTES')
+    }
+
     stages {
-        stage('Get Diagnostic Logs') {
+        stage('SCM Checkout') {
+            steps {
+                retry(3) {
+                    git branch: 'main', 
+                        url: 'https://github.com/HimashaChinthani/hospital_management.git', 
+                        credentialsId: 'HimashaChinthani'
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                bat """
+                docker build -t himashachinthani/hospital-management-backend:${BUILD_NUMBER} -t himashachinthani/hospital-management-backend:latest ./backend
+                docker build -t himashachinthani/hospital-management-frontend:${BUILD_NUMBER} -t himashachinthani/hospital-management-frontend:latest ./frontend
+                """
+            }
+        }
+
+        stage('Login to Docker Hub') {
+            steps {
+                withCredentials([password(credentialsId: 'docker-hub-credentials', variable: 'DOCKER_PASS')]) {
+                    bat """
+                    docker login -u himashachinthani -p %DOCKER_PASS%
+                    """
+                }
+            }
+        }
+
+        stage('Push Images') {
+            steps {
+                bat """
+                docker push himashachinthani/hospital-management-backend:${BUILD_NUMBER}
+                docker push himashachinthani/hospital-management-backend:latest
+                docker push himashachinthani/hospital-management-frontend:${BUILD_NUMBER}
+                docker push himashachinthani/hospital-management-frontend:latest
+                """
+            }
+        }
+
+        stage('Deploy to EC2') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY')]) {
                     bat """
-                    ssh -i "%SSH_KEY%" -o StrictHostKeyChecking=no ubuntu@174.129.183.135 "docker logs medicore_db --tail 100 > db_logs.txt && docker logs medicore_backend --tail 100 > backend_logs.txt && cat db_logs.txt && echo --- BACKEND --- && cat backend_logs.txt"
+                    ssh -i "%SSH_KEY%" -o StrictHostKeyChecking=no ubuntu@174.129.183.135 "cd /home/ubuntu/hospital_management && git fetch --all && git reset --hard origin/main && docker pull himashachinthani/hospital-management-backend:latest && docker pull himashachinthani/hospital-management-frontend:latest && docker compose down && docker compose up -d"
                     """
                 }
             }
