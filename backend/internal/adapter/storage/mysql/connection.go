@@ -2,6 +2,8 @@ package mysql
 
 import (
 	"fmt"
+	"time"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -19,9 +21,21 @@ func NewConnection(cfg Config) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.Database)
 	
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	var db *gorm.DB
+	var err error
+
+	// Retry loop: 15 attempts, 2 second delay (30s total)
+	for i := 1; i <= 15; i++ {
+		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		if err == nil {
+			break
+		}
+		fmt.Printf("Attempt %d/15: Failed to connect to mysql, retrying in 2 seconds...\n", i)
+		time.Sleep(2 * time.Second)
+	}
+
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to mysql: %w", err)
+		return nil, fmt.Errorf("failed to connect to mysql after retries: %w", err)
 	}
 	
 	return db, nil
