@@ -163,7 +163,7 @@ export default function Appointments() {
         <h2>Schedule</h2>
         {!isPatient && (
           <button className="btn-primary" onClick={() => { closeModal(); setShowModal(true); }}>
-            <Plus size={18} /> Book a New Appointment..
+            <Plus size={18} /> ...Book a New Appointment..
           </button>
         )}
       </div>
