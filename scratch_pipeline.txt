@@ -1,0 +1,21 @@
+pipeline {
+    agent any 
+
+    environment {
+        EC2_USER = 'ubuntu' 
+        EC2_IP = '174.129.183.135' 
+    }
+
+    stages { 
+        stage('Get Diagnostic Logs') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY')]) {
+                    // Fetch logs from the backend and database to see why they are crashing
+                    bat """
+                    ssh -i "%SSH_KEY%" -o StrictHostKeyChecking=no %EC2_USER%@%EC2_IP% "echo --- DATABASE LOGS --- && docker logs medicore_db --tail 20 && echo --- BACKEND LOGS --- && docker logs medicore_backend --tail 20"
+                    """
+                }
+            }
+        }
+    }
+}
