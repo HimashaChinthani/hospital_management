@@ -15,7 +15,9 @@ services:
     command: --default-authentication-plugin=mysql_native_password
 
   backend:
-    image: himashachinthani/hospital-management-backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: medicore_backend
     environment:
       - DB_HOST=db
@@ -31,7 +33,9 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: himashachinthani/hospital-management-frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: medicore_frontend
     ports:
       - "80:80"
