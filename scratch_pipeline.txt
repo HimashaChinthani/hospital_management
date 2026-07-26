@@ -1,18 +1,11 @@
 pipeline {
-    agent any 
-
-    environment {
-        EC2_USER = 'ubuntu' 
-        EC2_IP = '174.129.183.135' 
-    }
-
-    stages { 
+    agent any
+    stages {
         stage('Get Diagnostic Logs') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY')]) {
-                    // List all containers and get their logs
                     bat """
-                    ssh -i "%SSH_KEY%" -o StrictHostKeyChecking=no %EC2_USER%@%EC2_IP% "echo --- CONTAINERS --- && docker ps -a && echo --- DB LOGS --- && docker logs medicore_db --tail 20 && echo --- BACKEND LOGS --- && docker logs medicore_backend --tail 50"
+                    ssh -i "%SSH_KEY%" -o StrictHostKeyChecking=no ubuntu@174.129.183.135 "docker logs medicore_db --tail 100 > db_logs.txt && docker logs medicore_backend --tail 100 > backend_logs.txt && cat db_logs.txt && echo --- BACKEND --- && cat backend_logs.txt"
                     """
                 }
             }

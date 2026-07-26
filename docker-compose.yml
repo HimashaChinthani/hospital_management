@@ -12,10 +12,11 @@ services:
     volumes:
       - db_data_v2:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 60s
     restart: unless-stopped
 
   backend:
