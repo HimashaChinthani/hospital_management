@@ -14,7 +14,7 @@ MediCore is a comprehensive, modern, and responsive Hospital Management System b
 - **Billing & Invoices:** Generate real-time bills, apply taxes, and manage dynamic invoicing in local currency (RS).
 - **Settings & Security:** Live user profile fetching and account management directly from the dashboard.
 
-## 🛠️ Technology Stack
+## 🛠️ Technology Stack...
 
 **Frontend:**
 - React (Vite)
