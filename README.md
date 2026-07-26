@@ -22,7 +22,7 @@ MediCore is a comprehensive, modern, and responsive Hospital Management System b
 - Vanilla CSS with Modern Glassmorphism UI
 - Nginx (for production serving)
 
-**Backend:**
+**Backend:**..
 - Go (Golang)
 - Gin Web Framework
 - GORM (ORM)
